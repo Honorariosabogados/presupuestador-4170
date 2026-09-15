@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abogados La Rioja — Presupuestador de Honorarios</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0d2647">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0d2647;
+    --ink-2:#153a63;
+    --ink-deep:#081a33;
+    --gold:#c99a4e;
+    --gold-deep:#a97d38;
+    --blue:#2f7fae;
+    --bg:#f6f4ee;
+    --surface:#ffffff;
+    --line:#e6e0d1;
+    --ink-soft:#5c6478;
+    --sans:'Inter', -apple-system, sans-serif;
+    --display:'Manrope', 'Inter', sans-serif;
+    --radius:16px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--gold);color:#fff;}
+  .wrap{
+    max-width:1100px;
+    margin:0 auto;
+    padding:32px 20px 40px;
+  }
+
+  /* ---------- Header ---------- */
+  header.top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:24px;
+    margin-bottom:8px;
+    flex-wrap:wrap;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:16px;
+  }
+  .brand img{
+    height:78px;
+    width:auto;
+    display:block;
+  }
+  .brand .tagline{
+    font-family:var(--sans);
+    font-size:14.5px;
+    color:var(--ink-soft);
+    max-width:340px;
+    line-height:1.45;
+  }
+  .jus-pill{
+    background:var(--surface);
+    border:1.5px solid var(--gold);
+    border-radius:100px;
+    padding:10px 20px;
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+    white-space:nowrap;
+  }
+  .jus-pill .amt{
+    font-family:var(--display);
+    font-weight:800;
+    font-size:19px;
+    color:var(--ink);
+  }
+  .jus-pill .cap{
+    font-family:var(--sans);
+    font-size:11.5px;
+    color:var(--ink-soft);
+  }
+
+  .divider-hills{
+    height:20px;
+    margin:22px 0 26px;
+    opacity:0.55;
+  }
+
+  /* ---------- Tabs ---------- */
+  .tabs{
+    display:flex;
+    gap:10px;
+    margin-bottom:22px;
+    flex-wrap:wrap;
+  }
+  .tab-btn{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    font-family:var(--display);
+    font-size:14px;
+    font-weight:700;
+    padding:12px 18px;
+    background:var(--surface);
+    border:1.5px solid var(--line);
+    border-radius:12px;
+    color:var(--ink-soft);
+    cursor:pointer;
+    transition:border-color .15s ease, color .15s ease, background .15s ease;
+  }
+  .tab-btn svg{width:18px;height:18px;flex:none;}
+  .tab-btn:hover{border-color:var(--gold);color:var(--ink);}
+  .tab-btn.active{
+    background:var(--ink);
+    border-color:var(--ink);
+    color:#fff;
+  }
+
+  /* ---------- Layout ---------- */
+  .grid{
+    display:grid;
+    grid-template-columns:1.25fr 1fr;
+    gap:20px;
+    align-items:start;
+  }
+  @media (max-width:760px){
+    .grid{grid-template-columns:1fr;}
+    header.top{flex-direction:column;align-items:flex-start;}
+  }
+  .panel{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:28px;
+  }
+  .panel h2{
+    font-family:var(--display);
+    font-weight:700;
+    font-size:18px;
+    margin:0 0 20px;
+    color:var(--ink);
+  }
+  #fields{
+    transition:opacity .18s ease;
+  }
+  #fields.fade{opacity:0;}
+
+  .field{margin-bottom:20px;}
+  .field label{
+    display:block;
+    font-size:13px;
+    font-weight:600;
+    color:var(--ink);
+    margin-bottom:7px;
+  }
+  .field .hint{
+    font-size:12px;
+    color:#94978f;
+    margin-top:6px;
+    line-height:1.5;
+  }
+  select, input[type="number"]{
+    width:100%;
+    padding:12px 14px;
+    font-family:var(--sans);
+    font-size:14.5px;
+    border:1.5px solid var(--line);
+    background:var(--bg);
+    color:var(--ink);
+    border-radius:10px;
+    transition:border-color .15s ease;
+  }
+  select:focus, input:focus{
+    outline:none;
+    border-color:var(--blue);
+  }
+  .checkline{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    font-size:14px;
+    color:var(--ink);
+    font-weight:500;
+  }
+  .checkline input{width:16px;height:16px;accent-color:var(--gold-deep);}
+
+  .range-row{display:flex;align-items:center;gap:14px;}
+  input[type="range"]{
+    -webkit-appearance:none;
+    flex:1;
+    height:6px;
+    border-radius:100px;
+    background:var(--line);
+    outline:none;
+  }
+  input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    width:20px;height:20px;border-radius:50%;
+    background:var(--gold-deep);
+    border:3px solid #fff;
+    box-shadow:0 0 0 1.5px var(--gold-deep);
+    cursor:pointer;
+  }
+  input[type="range"]::-moz-range-thumb{
+    width:20px;height:20px;border-radius:50%;
+    background:var(--gold-deep);
+    border:3px solid #fff;
+    box-shadow:0 0 0 1.5px var(--gold-deep);
+    cursor:pointer;
+  }
+  .range-val{
+    font-family:var(--display);
+    font-weight:700;
+    font-size:14.5px;
+    min-width:48px;
+    text-align:right;
+    color:var(--ink);
+    font-variant-numeric:tabular-nums;
+  }
+
+  /* ---------- Result panel ---------- */
+  .result-panel{
+    position:sticky;
+    top:20px;
+    background:linear-gradient(155deg, var(--ink) 0%, var(--ink-deep) 100%);
+    color:#fff;
+    border-radius:var(--radius);
+    padding:28px;
+    overflow:hidden;
+    position:relative;
+  }
+  .result-panel::after{
+    content:"";
+    position:absolute;
+    right:-40px; bottom:-40px;
+    width:180px; height:180px;
+    background:radial-gradient(circle, rgba(201,154,78,0.16) 0%, transparent 70%);
+  }
+  .result-panel .eyebrow{
+    font-family:var(--sans);
+    font-size:13px;
+    color:#a9b2c4;
+    margin-bottom:8px;
+  }
+  .result-panel .amount{
+    font-family:var(--display);
+    font-weight:800;
+    font-size:clamp(30px,3.2vw,38px);
+    color:#fff;
+    margin-bottom:4px;
+    letter-spacing:-0.01em;
+    font-variant-numeric:tabular-nums;
+  }
+  .result-panel .jus-count{
+    font-family:var(--sans);
+    font-size:13.5px;
+    color:var(--gold);
+    margin-bottom:22px;
+    font-weight:600;
+  }
+  .breakdown{
+    border-top:1px solid rgba(255,255,255,0.12);
+    padding-top:14px;
+    font-size:13.5px;
+    color:#c3c8d4;
+  }
+  .breakdown div{
+    display:flex;
+    justify-content:space-between;
+    gap:14px;
+    padding:5px 0;
+  }
+  .breakdown span:last-child{
+    text-align:right;
+    color:#fff;
+    font-weight:500;
+  }
+  .adjust-box{
+    margin-top:20px;
+    padding-top:18px;
+    border-top:1px solid rgba(255,255,255,0.12);
+  }
+  .adjust-box .label{
+    font-size:13px;
+    color:#a9b2c4;
+    margin-bottom:12px;
+  }
+  .adjusted-amount{
+    font-family:var(--display);
+    font-weight:800;
+    font-size:24px;
+    color:var(--gold);
+    font-variant-numeric:tabular-nums;
+  }
+
+  .copy-btn{
+    margin-top:22px;
+    width:100%;
+    padding:13px 16px;
+    background:var(--gold);
+    color:var(--ink-deep);
+    border:none;
+    border-radius:10px;
+    font-family:var(--display);
+    font-weight:700;
+    font-size:14px;
+    cursor:pointer;
+    transition:background .15s ease, transform .1s ease;
+  }
+  .copy-btn:hover{background:#dbb264;}
+  .copy-btn:active{transform:scale(0.98);}
+
+  footer.note{
+    margin-top:26px;
+    font-size:12px;
+    color:var(--ink-soft);
+    line-height:1.7;
+  }
+  .credit{
+    margin-top:14px;
+    font-size:12.5px;
+    color:var(--ink-soft);
+  }
+  .credit strong{color:var(--blue);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="brand">
+      <img src="logo.png" alt="Abogados La Rioja">
+      <div class="tagline">Herramienta para presupuestar honorarios según el Decreto-Ley 4170/82, actualizada para todos los colegas que la usan.</div>
+    </div>
+    <div class="jus-pill">
+      <span class="amt" id="jus-display">$ 44.325,40</span>
+      <span class="cap">valor del jus · sept. 2026</span>
+    </div>
+  </header>
+
+  <svg class="divider-hills" viewBox="0 0 1100 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,35 L120,10 L220,28 L340,5 L470,30 L620,12 L760,32 L900,8 L1020,26 L1100,15 L1100,40 L0,40 Z" fill="#c99a4e"/>
+  </svg>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="grid">
+    <div class="panel">
+      <h2 id="panel-title">Datos del caso</h2>
+      <div id="fields"></div>
+    </div>
+
+    <div class="result-panel">
+      <div class="eyebrow">Honorario mínimo según Ley 4170</div>
+      <div class="amount" id="amount">$ 0</div>
+      <div class="jus-count" id="jus-count">0,00 jus</div>
+      <div class="breakdown" id="breakdown"></div>
+
+      <div class="adjust-box">
+        <div class="label">Ajuste por complejidad — a pactar, no es parte de la escala legal</div>
+        <div class="field" style="margin-bottom:6px;">
+          <div class="range-row">
+            <input type="range" id="complejidad" min="0.5" max="3" step="0.05" value="1">
+            <span class="range-val" id="complejidad-val">1.00x</span>
+          </div>
+        </div>
+        <div class="adjusted-amount" id="adjusted-amount">$ 0</div>
+      </div>
+
+      <button class="copy-btn" id="copyBtn">Copiar presupuesto</button>
+    </div>
+  </div>
+
+  <footer class="note">
+    Herramienta orientativa a partir de la escala del Decreto-Ley 4170/82 de La Rioja (texto ordenado por Ley 5827). El honorario judicial definitivo lo fija el juez según las pautas del art. 5° (monto, complejidad, mérito, trascendencia, etc.); esta calculadora te da el piso legal y un punto de partida para pactar con el cliente, no un valor vinculante.
+    <div class="credit">Una herramienta de <strong>@ab.geracaceres</strong> para los colegas de La Rioja.</div>
+  </footer>
+</div>
+
+<script>
+const VALOR_JUS = 44325.40;
+
+const ICONS = {
+  pecuniario: '<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><text x="12" y="16.5" font-size="12" font-weight="700" text-anchor="middle" fill="currentColor">$</text></svg>',
+  sinmonto: '<svg viewBox="0 0 24 24" fill="none"><rect x="5" y="3.5" width="14" height="17" rx="2" stroke="currentColor" stroke-width="1.6"/><line x1="8" y1="9" x2="16" y2="9" stroke="currentColor" stroke-width="1.6"/><line x1="8" y1="13" x2="16" y2="13" stroke="currentColor" stroke-width="1.6"/><line x1="8" y1="17" x2="13" y2="17" stroke="currentColor" stroke-width="1.6"/></svg>',
+  penal: '<svg viewBox="0 0 24 24" fill="none"><g transform="rotate(-40 12 12)"><rect x="8.5" y="4" width="7" height="6.5" rx="1.2" stroke="currentColor" stroke-width="1.6"/><line x1="12" y1="10.5" x2="12" y2="19" stroke="currentColor" stroke-width="1.6"/></g><line x1="5" y1="20.5" x2="15" y2="20.5" stroke="currentColor" stroke-width="1.6"/></svg>',
+  extrajudicial: '<svg viewBox="0 0 24 24" fill="none"><g transform="rotate(45 12 12)"><rect x="10.5" y="3" width="3" height="14" rx="1.3" stroke="currentColor" stroke-width="1.6"/><path d="M12 17 L13.6 21 L10.4 21 Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></g></svg>',
+};
+
+const categories = {
+  pecuniario: { label: "Con monto", title: "Juicio con monto económico (Art. 6-31)" },
+  sinmonto: { label: "Sin monto", title: "Asunto sin apreciación pecuniaria (Art. 15.A)" },
+  penal: { label: "Penal", title: "Actuación penal" },
+  extrajudicial: { label: "Extrajudicial", title: "Labor extrajudicial (Art. 15.B)" },
+};
+
+let state = { cat: "penal" };
+let lastAmount = 0, lastAdjusted = 0;
+
+const tabsEl = document.getElementById("tabs");
+const fieldsEl = document.getElementById("fields");
+const panelTitle = document.getElementById("panel-title");
+
+Object.entries(categories).forEach(([key, c]) => {
+  const btn = document.createElement("button");
+  btn.className = "tab-btn" + (key === state.cat ? " active" : "");
+  btn.innerHTML = ICONS[key] + "<span>" + c.label + "</span>";
+  btn.onclick = () => { state.cat = key; resetForm(state.cat); render(); };
+  btn.dataset.key = key;
+  tabsEl.appendChild(btn);
+});
+
+function fieldWrap(labelText, inner, hint) {
+  const div = document.createElement("div");
+  div.className = "field";
+  const label = document.createElement("label");
+  label.textContent = labelText;
+  div.appendChild(label);
+  div.appendChild(inner);
+  if (hint) {
+    const h = document.createElement("div");
+    h.className = "hint";
+    h.textContent = hint;
+    div.appendChild(h);
+  }
+  fieldsEl.appendChild(div);
+  return div;
+}
+
+function makeSelect(options, onChange, id) {
+  const sel = document.createElement("select");
+  sel.id = id;
+  options.forEach(o => {
+    const opt = document.createElement("option");
+    opt.value = o.value;
+    opt.textContent = o.text;
+    sel.appendChild(opt);
+  });
+  sel.onchange = () => onChange(sel.value);
+  return sel;
+}
+
+function makeNumber(id, value, onChange) {
+  const inp = document.createElement("input");
+  inp.type = "number";
+  inp.id = id;
+  inp.value = value;
+  inp.min = "0";
+  inp.oninput = () => onChange(parseFloat(inp.value) || 0);
+  return inp;
+}
+
+const SIN_MONTO = [
+  { text: "Divorcio", jus: 60 },
+  { text: "Divorcio por presentación conjunta", jus: 30 },
+  { text: "Adopción", jus: 20 },
+  { text: "Tutela y curatela", jus: 15 },
+  { text: "Insania y filiación", jus: 40 },
+  { text: "Declaración de ausencia con presunción de fallecimiento", jus: 30 },
+  { text: "Tenencia y régimen de visitas", jus: 10 },
+  { text: "Informaciones sumarias", jus: 10 },
+  { text: "Inscripción en la matrícula de comerciante", jus: 15 },
+  { text: "Autorización para ejercer el comercio", jus: 8 },
+  { text: "Rúbrica de libros de comercio", jus: 4 },
+  { text: "Denuncia penal con firma de letrado", jus: 10 },
+];
+
+const PENAL_ROLES = {
+  defensa_sumario_contravencion: {
+    label: "Defensa — Sumario — Contravención o falta administrativa",
+    options: [
+      { text: "Defensa", jus: 12 },
+      { text: "Con pruebas producidas", jus: 18 },
+      { text: "Resolución favorable", jus: 25 },
+    ], cite: "Art. 15.A.17.a.I"
+  },
+  defensa_sumario_correccional: {
+    label: "Defensa — Sumario — Juicio correccional",
+    options: [
+      { text: "Defensa", jus: 22 },
+      { text: "Con pruebas producidas", jus: 25 },
+      { text: "Falta de mérito", jus: 30 },
+      { text: "Sobreseimiento definitivo", jus: 40 },
+    ], cite: "Art. 15.A.17.a.II"
+  },
+  defensa_sumario_criminal: {
+    label: "Defensa — Sumario — Juicio criminal",
+    options: [
+      { text: "Defensa", jus: 30 },
+      { text: "Con pruebas producidas", jus: 35 },
+      { text: "Falta de mérito", jus: 50 },
+      { text: "Sobreseimiento definitivo", jus: 60 },
+    ], cite: "Art. 15.A.17.a.III"
+  },
+  defensa_plenario_correccional: {
+    label: "Defensa — Plenario — Juicio correccional",
+    options: [
+      { text: "Defensa", jus: 25 },
+      { text: "Con pruebas producidas", jus: 35 },
+      { text: "Sentencia absolutoria", jus: 55 },
+    ], cite: "Art. 15.A.17.b.I"
+  },
+  defensa_plenario_criminal: {
+    label: "Defensa — Plenario — Juicio criminal",
+    options: [
+      { text: "Defensa", jus: 30 },
+      { text: "Con pruebas producidas", jus: 45 },
+      { text: "Sentencia absolutoria", jus: 60 },
+    ], cite: "Art. 15.A.17.b.II"
+  },
+  excarcelacion: {
+    label: "Pedido de excarcelación",
+    options: [{ text: "Pedido", jus: 12 }, { text: "Concedida", jus: 15 }],
+    cite: "Art. 15.A.13-14"
+  },
+  eximicion: {
+    label: "Pedido de eximición de prisión",
+    options: [{ text: "Pedido", jus: 12 }, { text: "Concedida", jus: 15 }],
+    cite: "Art. 15.A.15-16"
+  },
+  particular_damnificado: {
+    label: "Particular damnificado",
+    options: [
+      { text: "Revocación de libertad provisoria", jus: 12 },
+      { text: "Revocación de libertad provisoria, con pruebas producidas", jus: 22 },
+      { text: "Obtención de procesamiento o revocación de falta de mérito", jus: 25 },
+      { text: "Ídem, con pruebas producidas", jus: 30 },
+      { text: "Obtención de condena o revocación de sobreseimiento", jus: 30 },
+      { text: "Ídem, con pruebas producidas", jus: 50 },
+    ], cite: "Art. 15.A.18"
+  },
+  querellante: {
+    label: "Querellante",
+    options: [
+      { text: "Querella", jus: 30 },
+      { text: "Con producción de pruebas", jus: 50 },
+      { text: "Con éxito", jus: 60 },
+    ], cite: "Art. 15.A.19.a"
+  },
+};
+
+const EXTRA_FIJO = [
+  { text: "Consulta verbal", jus: 0.5 },
+  { text: "Consulta evacuada por escrito", jus: 2 },
+  { text: "Estudio o información de actuaciones", jus: 2 },
+  { text: "Asistencia y asesoramiento en actos jurídicos", jus: 2.5 },
+  { text: "Gastos administrativos de estudio (inicio de juicio)", jus: 2 },
+  { text: "Redacción de denuncia penal (sin firma de letrado)", jus: 8 },
+];
+
+const EXTRA_PORCENTUAL = {
+  locacion: { text: "Redacción de contrato de locación", min: 5, max: 5, floor: 6 },
+  boleto: { text: "Redacción de boleto de compraventa", min: 5, max: 5, floor: 10 },
+  testamento: { text: "Redacción de testamento", min: 1, max: 1, floor: 10 },
+  sociedad: { text: "Redacción de contrato/estatuto de sociedad", min: 1, max: 3, floor: 20 },
+  otros: { text: "Redacción de otros contratos", min: 1, max: 5, floor: 6 },
+};
+
+const TRAMITE_PCT = {
+  completo: { text: "Instancia única — sentencia definitiva", pct: 1.00, cite: "Art. 6" },
+  ejec_sin_exc: { text: "Ejecutivo, sin excepciones opuestas", pct: 0.70, cite: "Art. 17" },
+  ejec_con_exc: { text: "Ejecutivo, con excepciones opuestas", pct: 1.00, cite: "Art. 17" },
+  ejec_sent_sin_exc: { text: "Ejecución de sentencia (proceso de conocimiento), sin excepciones", pct: 0.40, cite: "Art. 17" },
+  ejec_sent_con_exc: { text: "Ejecución de sentencia, con excepciones", pct: 0.60, cite: "Art. 17" },
+  ejec_remate: { text: "Ejecución de sentencia de remate", pct: 0.30, cite: "Art. 17" },
+  allanamiento: { text: "Allanamiento inmediato a la demanda", pct: 0.60, cite: "Art. 26" },
+  transaccion_antes: { text: "Transacción antes o con la contestación", pct: 0.70, cite: "Art. 26" },
+  transaccion_despues: { text: "Transacción después de contestada la demanda", pct: 1.00, cite: "Art. 26" },
+  cautelar_sin: { text: "Medida cautelar, sin controversia", pct: 0.30, cite: "Art. 20" },
+  cautelar_con: { text: "Medida cautelar, con controversia", pct: 0.50, cite: "Art. 20" },
+  alzada: { text: "Actuación ante el Superior Tribunal (apelación)", pct: 0.35, cite: "Art. 13 (30-40%)" },
+};
+
+let form = {};
+
+function resetForm(cat) {
+  if (cat === "pecuniario") form = { monto: 1000000, pct: 15, tramite: "completo", vencida: false };
+  else if (cat === "sinmonto") form = { item: 0 };
+  else if (cat === "penal") form = { rol: "defensa_sumario_criminal", opt: 0 };
+  else if (cat === "extrajudicial") form = { modo: "fijo", item: 0, itemPct: "locacion", montoContrato: 500000, pct: 3 };
+}
+resetForm(state.cat);
+
+function render() {
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.key === state.cat));
+  panelTitle.textContent = categories[state.cat].title;
+
+  fieldsEl.classList.add("fade");
+  setTimeout(() => {
+    fieldsEl.innerHTML = "";
+    if (state.cat === "pecuniario") renderPecuniario();
+    if (state.cat === "sinmonto") renderSinMonto();
+    if (state.cat === "penal") renderPenal();
+    if (state.cat === "extrajudicial") renderExtrajudicial();
+    compute();
+    requestAnimationFrame(() => fieldsEl.classList.remove("fade"));
+  }, 90);
+}
+
+function renderPecuniario() {
+  const monto = makeNumber("monto", form.monto, v => { form.monto = v; compute(); });
+  fieldWrap("Monto del juicio o reclamo (ARS)", monto);
+
+  const pctWrap = document.createElement("div");
+  const row = document.createElement("div");
+  row.className = "range-row";
+  const range = document.createElement("input");
+  range.type = "range"; range.min = "10"; range.max = "20"; range.step = "1"; range.value = form.pct;
+  const val = document.createElement("span");
+  val.className = "range-val";
+  val.textContent = form.pct + "%";
+  range.oninput = () => { form.pct = parseInt(range.value); val.textContent = form.pct + "%"; compute(); };
+  row.appendChild(range); row.appendChild(val);
+  pctWrap.appendChild(row);
+  fieldWrap("Porcentaje de la escala (Art. 6, 10-20%)", pctWrap, "Más cerca del 20% cuanto mayor sea la complejidad, mérito y responsabilidad del trabajo (Art. 5).");
+
+  const sel = makeSelect(
+    Object.entries(TRAMITE_PCT).map(([k, v]) => ({ value: k, text: v.text + " (" + Math.round(v.pct * 100) + "%)" })),
+    v => { form.tramite = v; compute(); }, "tramite"
+  );
+  sel.value = form.tramite;
+  fieldWrap("Tipo de trámite / etapa", sel);
+
+  const chk = document.createElement("label");
+  chk.className = "checkline";
+  const cb = document.createElement("input");
+  cb.type = "checkbox";
+  cb.checked = form.vencida;
+  cb.onchange = () => { form.vencida = cb.checked; compute(); };
+  chk.appendChild(cb);
+  chk.appendChild(document.createTextNode(" Represento a la parte vencida (Art. 7 — 70% del honorario)"));
+  fieldsEl.appendChild(chk);
+}
+
+function renderSinMonto() {
+  const sel = makeSelect(
+    SIN_MONTO.map((o, i) => ({ value: i, text: o.text + " — " + o.jus + " jus" })),
+    v => { form.item = parseInt(v); compute(); }, "item"
+  );
+  fieldWrap("Tipo de asunto (Art. 15.A)", sel);
+}
+
+function renderPenal() {
+  const rolSel = makeSelect(
+    Object.entries(PENAL_ROLES).map(([k, v]) => ({ value: k, text: v.label })),
+    v => { form.rol = v; form.opt = 0; render(); }, "rol"
+  );
+  rolSel.value = form.rol;
+  fieldWrap("Rol / etapa", rolSel);
+
+  const role = PENAL_ROLES[form.rol];
+  const optSel = makeSelect(
+    role.options.map((o, i) => ({ value: i, text: o.text + " — " + o.jus + " jus" })),
+    v => { form.opt = parseInt(v); compute(); }, "opt"
+  );
+  fieldWrap("Resultado / estado procesal (" + role.cite + ")", optSel);
+}
+
+function renderExtrajudicial() {
+  const modoSel = makeSelect(
+    [{ value: "fijo", text: "Monto fijo en jus" }, { value: "pct", text: "Porcentual sobre un contrato/bien" }],
+    v => { form.modo = v; render(); }, "modo"
+  );
+  modoSel.value = form.modo;
+  fieldWrap("Modalidad", modoSel);
+
+  if (form.modo === "fijo") {
+    const sel = makeSelect(
+      EXTRA_FIJO.map((o, i) => ({ value: i, text: o.text + " — " + o.jus + " jus" })),
+      v => { form.item = parseInt(v); compute(); }, "itemFijo"
+    );
+    fieldWrap("Tipo de labor (Art. 15.B)", sel);
+  } else {
+    const sel = makeSelect(
+      Object.entries(EXTRA_PORCENTUAL).map(([k, v]) => ({ value: k, text: v.text })),
+      v => { form.itemPct = v; render(); }, "itemPct"
+    );
+    sel.value = form.itemPct;
+    fieldWrap("Tipo de instrumento", sel);
+
+    const monto = makeNumber("montoContrato", form.montoContrato, v => { form.montoContrato = v; compute(); });
+    fieldWrap("Valor del contrato / bien (ARS)", monto);
+
+    const item = EXTRA_PORCENTUAL[form.itemPct];
+    const row = document.createElement("div");
+    row.className = "range-row";
+    const range = document.createElement("input");
+    range.type = "range"; range.min = item.min; range.max = item.max; range.step = "0.1"; range.value = form.pct;
+    const val = document.createElement("span");
+    val.className = "range-val";
+    val.textContent = form.pct + "%";
+    range.oninput = () => { form.pct = parseFloat(range.value); val.textContent = form.pct + "%"; compute(); };
+    row.appendChild(range); row.appendChild(val);
+    fieldWrap("Porcentaje (" + item.min + "-" + item.max + "%, mínimo " + item.floor + " jus)", row);
+  }
+}
+
+function money(n) {
+  return "$ " + Math.round(n).toLocaleString("es-AR");
+}
+
+function animateValue(el, start, end, formatter) {
+  const duration = 420;
+  const t0 = performance.now();
+  function step(now) {
+    const p = Math.min(1, (now - t0) / duration);
+    const eased = 1 - Math.pow(1 - p, 3);
+    const val = start + (end - start) * eased;
+    el.textContent = formatter(val);
+    if (p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+let lastSummary = "";
+
+function compute() {
+  let jus = 0;
+  const breakdown = [];
+
+  if (state.cat === "pecuniario") {
+    const tramite = TRAMITE_PCT[form.tramite];
+    let honorario = form.monto * (form.pct / 100) * tramite.pct;
+    if (form.vencida) honorario *= 0.70;
+    jus = honorario / VALOR_JUS;
+    if (jus < 10) {
+      breakdown.push(["Honorario calculado", money(honorario) + " (" + jus.toFixed(2) + " jus)"]);
+      jus = 10;
+      breakdown.push(["Mínimo legal aplicado", "10 jus (Art. 6)"]);
+    } else {
+      breakdown.push(["Monto × " + form.pct + "% × " + Math.round(tramite.pct * 100) + "%", tramite.text]);
+      if (form.vencida) breakdown.push(["Parte vencida", "× 70% (Art. 7)"]);
+    }
+  }
+
+  if (state.cat === "sinmonto") {
+    const item = SIN_MONTO[form.item];
+    jus = item.jus;
+    breakdown.push(["Asunto", item.text]);
+    breakdown.push(["Escala legal", item.jus + " jus fijos (Art. 15.A)"]);
+  }
+
+  if (state.cat === "penal") {
+    const role = PENAL_ROLES[form.rol];
+    const opt = role.options[form.opt];
+    jus = opt.jus;
+    breakdown.push(["Rol", role.label]);
+    breakdown.push(["Estado", opt.text + " — " + role.cite]);
+  }
+
+  if (state.cat === "extrajudicial") {
+    if (form.modo === "fijo") {
+      const item = EXTRA_FIJO[form.item];
+      jus = item.jus;
+      breakdown.push(["Labor", item.text]);
+      breakdown.push(["Escala legal", item.jus + " jus (Art. 15.B)"]);
+    } else {
+      const item = EXTRA_PORCENTUAL[form.itemPct];
+      const honorario = form.montoContrato * (form.pct / 100);
+      jus = honorario / VALOR_JUS;
+      if (jus < item.floor) {
+        breakdown.push(["Calculado (" + form.pct + "%)", money(honorario)]);
+        jus = item.floor;
+        breakdown.push(["Mínimo legal aplicado", item.floor + " jus"]);
+      } else {
+        breakdown.push([item.text, form.pct + "% del valor"]);
+      }
+    }
+  }
+
+  const honorarioFinal = jus * VALOR_JUS;
+  animateValue(document.getElementById("amount"), lastAmount, honorarioFinal, money);
+  lastAmount = honorarioFinal;
+  document.getElementById("jus-count").textContent = jus.toFixed(2).replace(".", ",") + " jus";
+
+  const bEl = document.getElementById("breakdown");
+  bEl.innerHTML = "";
+  breakdown.forEach(([k, v]) => {
+    const row = document.createElement("div");
+    row.innerHTML = "<span>" + k + "</span><span>" + v + "</span>";
+    bEl.appendChild(row);
+  });
+
+  const complejidad = parseFloat(document.getElementById("complejidad").value);
+  const adjustedFinal = honorarioFinal * complejidad;
+  animateValue(document.getElementById("adjusted-amount"), lastAdjusted, adjustedFinal, money);
+  lastAdjusted = adjustedFinal;
+
+  lastSummary = "Presupuesto de honorarios — " + categories[state.cat].title + "\n" +
+    "Honorario mínimo (Ley 4170): " + money(honorarioFinal) + " (" + jus.toFixed(2).replace(".", ",") + " jus)\n" +
+    "Ajustado por complejidad (" + complejidad.toFixed(2) + "x): " + money(adjustedFinal) + "\n" +
+    "Valor del jus: " + money(VALOR_JUS) + " — Abogados La Rioja";
+}
+
+document.getElementById("complejidad").addEventListener("input", (e) => {
+  document.getElementById("complejidad-val").textContent = parseFloat(e.target.value).toFixed(2) + "x";
+  compute();
+});
+
+document.getElementById("copyBtn").addEventListener("click", () => {
+  const btn = document.getElementById("copyBtn");
+  navigator.clipboard.writeText(lastSummary).then(() => {
+    const original = btn.textContent;
+    btn.textContent = "Copiado ✓";
+    setTimeout(() => { btn.textContent = original; }, 1600);
+  });
+});
+
+document.getElementById("jus-display").textContent = money(VALOR_JUS);
+
+render();
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("service-worker.js");
+  });
+}
+</script>
+</body>
+</html>
