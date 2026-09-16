@@ -5,7 +5,7 @@ Calculadora de honorarios profesionales basada en el **Decreto-Ley 4170/82 de La
 provincia cargue los datos de una causa puntual y obtenga, en segundos, el honorario
 mínimo según la escala legal vigente.
 
-**Demo en vivo:** `https://TU-USUARIO.github.io/NOMBRE-DEL-REPO/`
+**Demo en vivo:** https://honorariosabogados.github.io/presupuestador-4170/
 *(reemplazá esta línea por la URL real una vez que actives GitHub Pages)*
 
 ## Qué resuelve
