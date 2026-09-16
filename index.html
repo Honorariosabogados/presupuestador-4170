@@ -89,6 +89,25 @@
     font-size:11.5px;
     color:var(--ink-soft);
   }
+  .install-btn{
+    background:var(--ink);
+    color:#fff;
+    border:none;
+    border-radius:100px;
+    padding:11px 20px;
+    font-family:var(--display);
+    font-weight:700;
+    font-size:13.5px;
+    cursor:pointer;
+    transition:background .15s ease, transform .1s ease;
+  }
+  .install-btn:hover{background:var(--ink-2);}
+  .install-btn:active{transform:scale(0.97);}
+  .ios-hint{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    max-width:200px;
+  }
 
   .divider-hills{
     height:20px;
@@ -342,9 +361,13 @@
       <img src="logo.png" alt="Abogados La Rioja">
       <div class="tagline">Herramienta para presupuestar honorarios según el Decreto-Ley 4170/82, actualizada para todos los colegas que la usan.</div>
     </div>
-    <div class="jus-pill">
-      <span class="amt" id="jus-display">$ 44.325,40</span>
-      <span class="cap">valor del jus · sept. 2026</span>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+      <button id="installBtn" class="install-btn" style="display:none;">Instalar app</button>
+      <span id="iosHint" class="ios-hint" style="display:none;">¿iPhone? Tocá Compartir → Agregar a inicio</span>
+      <div class="jus-pill">
+        <span class="amt" id="jus-display">$ 44.325,40</span>
+        <span class="cap">valor del jus · sept. 2026</span>
+      </div>
     </div>
   </header>
 
@@ -820,11 +843,48 @@ document.getElementById("jus-display").textContent = money(VALOR_JUS);
 
 render();
 
+// ---------- Instalar como app ----------
+const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const installBtn = document.getElementById("installBtn");
+const iosHint = document.getElementById("iosHint");
+
+if (!isStandalone) {
+  if (isIOS) {
+    iosHint.style.display = "inline-block";
+  } else {
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      window.deferredInstallPrompt = e;
+      installBtn.style.display = "inline-block";
+    });
+    installBtn.addEventListener("click", async () => {
+      if (!window.deferredInstallPrompt) return;
+      window.deferredInstallPrompt.prompt();
+      await window.deferredInstallPrompt.userChoice;
+      window.deferredInstallPrompt = null;
+      installBtn.style.display = "none";
+    });
+  }
+}
+
+// ---------- Service worker: instala y se actualiza sola ----------
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("service-worker.js");
+    navigator.serviceWorker.register("service-worker.js").then((reg) => {
+      // Revisa si hay una versión nueva cada vez que se abre la app
+      reg.update();
+    });
+  });
+
+  let refreshing = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (refreshing) return;
+    refreshing = true;
+    window.location.reload();
   });
 }
+
 </script>
 </body>
 </html>
